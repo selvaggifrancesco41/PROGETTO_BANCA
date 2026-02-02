@@ -1,2 +1,124 @@
-# PROGETTO_BANCA
+# PROGETTO_SERVER_BANCA
 Progetto svolto individualmente che riprende una simulazione realistica in sistema operativo GNU/LINUX
+
+# Contesto del progetto
+
+Il progetto simula un server **GNU/Linux** che ospita un’applicazione bancaria fittizia, utilizzata da clienti simulati per effettuare operazioni tipiche come:
+
+- accessi
+- prelievi
+- depositi
+- bonifici
+
+Il sistema è progettato per generare **traffico applicativo e di rete artificiale ma realistico**, con l’obiettivo di analizzare il comportamento del server, delle connessioni di rete, delle porte e dei socket attivi.
+
+L’intero scenario riproduce una situazione **plausibile e credibile** che potrebbe verificarsi su un server reale in ambiente GNU/Linux.
+
+---
+
+## Dataset utilizzato
+
+Il progetto utilizza un file CSV denominato **`clienti_banca.csv`**, che rappresenta l’anagrafica statica dei clienti della banca.
+
+### Intestazione del file
+
+```csv
+customer_id,first_name,last_name,tax_code,email,phone_number,address,city,postal_code,country,password_hash,two_factor_enabled,account_status,account_id,iban,account_type,account_balance,currency,card_id,card_number,card_expiry,card_status,last_login,opened_at
+```
+
+Il dataset contiene esclusivamente dati simulati ed è utilizzato come base informativa, non come database reale.
+
+I dati anagrafici sono separati dai log applicativi per mantenere una struttura coerente e realistica.
+
+---
+
+### Generazione del traffico e degli eventi
+
+Il traffico applicativo viene generato tramite **script Bash** pianificati con cron, che simulano il comportamento di più clienti che interagiscono contemporaneamente con il server.
+
+Gli script simulano:
+
+- accessi e disconnessioni
+- prelievi e depositi
+- bonifici verso IBAN differenti
+- accessi da indirizzi IP diversi
+- sessioni concorrenti
+
+---
+
+## Log degli eventi applicativi
+
+Ogni interazione con il server genera un evento registrato in un file di log strutturato, che rappresenta la **principale fonte** di raccoglimento dati del progetto.
+
+Gli eventi applicativi vengono registrati in tempo reale in un **database SQLite**, scelto per la sua leggerezza, affidabilità e idoneità alla gestione di log cronologici in ambienti GNU/Linux.
+
+### Esempio di file .log
+
+```sql
+timestamp,customer_id,ip_address,azione,importo,iban_destinatario,session_duration,source_type
+2026-02-02 10:15:03,1023,192.168.1.45,LOGIN,,,,USER
+2026-02-02 10:18:21,1023,192.168.1.45,BONIFICO,500,IT60X0542811101000000123456,180,USER
+
+```
+
+### Azioni registrate
+- **`LOGIN`**
+- **`LOGOUT`**
+- **`PRELIEVO`**
+- **`DEPOSITO`**
+- **`BONIFICO`**
+
+---
+
+## Analisi di rete e di sistema
+Il focus principale del progetto **non è l’elaborazione dei dati anagrafici**, ma l’analisi del comportamento del server dal punto di vista di **rete e di sistema**.
+
+### Oggetti dell'analisi
+- porte aperte
+- socket attivi
+- servizi in ascolto
+- connessioni simultanee
+- utilizzo anomalo delle risorse di rete
+
+---
+
+## Interazione con il dataset clienti
+L'interazione con il file **`clienti_banca.csv`** è limitata al recupero delle informazioni di supporto, ad esempio per verificare lo stato di un account o la mail di chi accede.
+
+### Esempio
+
+```csv
+grep ",active," clienti_banca.csv
+```
+la maggior parte delle analisi viene effettuata **senza interrogare direttamente l'anagrafica**, concentrandosi sui log applicativi e sullo stato del sistema.
+
+---
+
+## Simulazione di dispositivi fisici (ATM)
+
+Il progetto include la simulazione di **dispositivi fisici bancari**, in particolare **ATM (Automated Teller Machine)**, che interagiscono con il server tramite rete, analogamente a quanto avverrebbe in un contesto reale.
+
+Gli ATM sono trattati come **entità distinte dagli utenti finali**, caratterizzate da:
+- indirizzo IP dedicato
+- comportamento automatico
+- operazioni ripetitive (prelievi, interrogazioni)
+- assenza di interazione diretta con l’interfaccia utente
+
+La simulazione degli ATM consente di introdurre una componente “fisica” nell’ecosistema del progetto, mantenendo un approccio coerente con un ambiente GNU/Linux e con l’analisi delle risorse di rete.
+
+
+Per distinguere le operazioni effettuate dagli utenti da quelle generate da dispositivi fisici, il database degli eventi include un campo aggiuntivo che identifica la **tipologia di sorgente** dell’evento.
+
+### Schema logico degli eventi:
+
+```sql
+timestamp,customer_id,ip_address,azione,importo,iban_destinatario,session_duration,source_type
+```
+Dove **`source_type`** può assumere valori come:
+- **`USER`** -> operazione effettuata da un cliente
+- **`ATM`** -> operazione effettuata da un dispositivo fisico
+
+--- 
+
+
+
