@@ -98,6 +98,8 @@ la maggior parte delle analisi viene effettuata **senza interrogare direttamente
 
 Il progetto include la simulazione di **dispositivi fisici bancari**, in particolare **ATM (Automated Teller Machine)**, che interagiscono con il server tramite rete, analogamente a quanto avverrebbe in un contesto reale.
 
+Gli ATM simulati utilizzano una subnet dedicata **`(192.168.100.0/24)`**, separata dal traffico degli utenti, al fine di **facilitare l’analisi** delle connessioni di rete e l’individuazione di comportamenti anomali.”
+
 Gli ATM sono trattati come **entità distinte dagli utenti finali**, caratterizzate da:
 - indirizzo IP dedicato
 - comportamento automatico
