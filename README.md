@@ -87,7 +87,7 @@ L'interazione con il file **`clienti_banca.csv`** è limitata al recupero delle 
 
 ### Esempio
 
-```csv
+```terminal
 grep ",active," clienti_banca.csv
 ```
 la maggior parte delle analisi viene effettuata **senza interrogare direttamente l'anagrafica**, concentrandosi sui log applicativi e sullo stato del sistema.
@@ -105,6 +105,8 @@ Gli ATM sono trattati come **entità distinte dagli utenti finali**, caratterizz
 - comportamento automatico
 - operazioni ripetitive (prelievi, interrogazioni)
 - assenza di interazione diretta con l’interfaccia utente
+
+---
 
 La simulazione degli ATM consente di introdurre una componente “fisica” nell’ecosistema del progetto, mantenendo un approccio coerente con un ambiente GNU/Linux e con l’analisi delle risorse di rete.
 
