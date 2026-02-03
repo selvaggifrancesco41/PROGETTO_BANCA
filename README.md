@@ -23,8 +23,8 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
 4. [Rilevamento ATM che comunicano su porte non autorizzate](#rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
 5. [Rilevamento tentativi di brute-force sulle API del server](#rilevamento-tentativi-di-brute-force-sulle-api-del-server)
-6. [Correlazione tra anomalie di rete e degrado del servizio bancario](correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
-7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](rilevamento-di-pattern-anomali-nell-utilizzo-delle-api-bancarie)
+6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
+7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#rilevamento-di-pattern-anomali-nell-utilizzo-delle-api-bancarie)
 
 
 ---
