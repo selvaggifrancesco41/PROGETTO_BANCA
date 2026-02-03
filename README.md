@@ -140,6 +140,8 @@ Dove **`source_type`** può assumere valori come:
 ### Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
 Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
 Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
+
+blablabla
 --
 - [Elenco dei problemi](#elenco-dei-problemi)
 --- 
