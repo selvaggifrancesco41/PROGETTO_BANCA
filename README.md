@@ -19,7 +19,8 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 ## Elenco dei problemi
 
 1. [Rilevamento di flussi anomali di bonifici in ingresso (AML)](#rilevamento-di-flussi-anomali-di-bonifici-in-ingresso-anti-money-laundering)
-3. [Individuazione di accessi simultanei sospetti dallo stesso account](#individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
+2. [Individuazione di accessi simultanei sospetti dallo stesso account](#individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
+3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
 
 
 ---
@@ -148,8 +149,15 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 - **`ss`**, **`lsof`**
 - correlazione indirizzo IP <-> customer_id
 
+---
 
+### Analisi degli accessi notturni fuori dal profilo abituale
+Identificare utenti che accedono in fasce orarie anomale rispetto al loro storico, potenziale furto di account.
 
-Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici...
+**Focus tecnico**
+- timestamp
+- finestre temporali
+- nessuna interrogazione diretta al DB utenti
+
 
 
