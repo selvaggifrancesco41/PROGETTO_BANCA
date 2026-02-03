@@ -16,6 +16,17 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 
 ---
 
+## Elenco dei problemi
+
+1. Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
+
+
+
+2. [...]
+3. [...]
+
+---
+
 ## Dataset utilizzato
 
 Il progetto utilizza un file CSV denominato **`clienti_banca.csv`**, che rappresenta l’anagrafica statica dei clienti della banca.
@@ -124,5 +135,15 @@ Dove **`source_type`** può assumere valori come:
 
 --- 
 
+# Problemi affrontati:
+
+### Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
+Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
+Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
+
+
+
+
+Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici...
 
 
