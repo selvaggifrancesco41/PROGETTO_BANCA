@@ -22,7 +22,7 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 2. [Individuazione di accessi simultanei sospetti dallo stesso account](#individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
 3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
 4. [Rilevamento ATM che comunicano su porte non autorizzate](#rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
-5. [Rilevamento tentativi di brute-force sulle API del server](rilevamento-tentativi-di-brute-force-sulle-api-del-server)
+5. [Rilevamento tentativi di brute force sulle API del server](rilevamento-tentativi-di-brute-force-sulle-api-del-server)
 
 
 ---
@@ -179,3 +179,4 @@ Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste
 ---
 
 ## Rilevamento tentativi di brute force sulle API del server
+Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancario per individuare tentativi di accesso automatizzati.
