@@ -19,13 +19,13 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 ## Elenco dei problemi
 
 1. [Rilevamento di flussi anomali di bonifici in ingresso (AML)](#1-rilevamento-di-flussi-anomali-di-bonifici-in-ingresso-anti-money-laundering)
-2. [Individuazione di accessi simultanei sospetti dallo stesso account](#individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
-3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
-4. [Rilevamento ATM che comunicano su porte non autorizzate](#rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
-5. [Rilevamento tentativi di brute-force sulle API del server](#rilevamento-tentativi-di-brute-force-sulle-api-del-server)
-6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
-7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#rilevamento-di-pattern-anomali-nellutilizzo-delle-api-bancarie)
-8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#rilevamento-di-canali-di-comunicazione-covert-allinterno-del-traffico-bancario)
+2. [Individuazione di accessi simultanei sospetti dallo stesso account](#2-individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
+3. [Analisi degli accessi notturni fuori dal profilo abituale](#3-analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
+4. [Rilevamento ATM che comunicano su porte non autorizzate](#4-rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
+5. [Rilevamento tentativi di brute-force sulle API del server](#5-rilevamento-tentativi-di-brute-force-sulle-api-del-server)
+6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#6-correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
+7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#7-rilevamento-di-pattern-anomali-nellutilizzo-delle-api-bancarie)
+8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#8-rilevamento-di-canali-di-comunicazione-covert-allinterno-del-traffico-bancario)
 
 
 ---
@@ -147,7 +147,7 @@ Il sistema analizza il database degli eventi, individua i conti potenzialmente s
 ### [Elenco dei problemi](#elenco-dei-problemi)
 --- 
 
-### Individuazione di accessi simultanei sospetti dallo stesso account
+### 2-Individuazione di accessi simultanei sospetti dallo stesso account
 Rilevare utenti che risultano attivi sul server con più **sessioni contemporanee provenienti da IP diversi**, possibile compromissione delle credenziali.
 
 **Focus tecnico**
@@ -158,7 +158,7 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-### Analisi degli accessi notturni fuori dal profilo abituale
+### 3-Analisi degli accessi notturni fuori dal profilo abituale
 Identificare utenti che accedono in fasce orarie anomale rispetto al loro storico, potenziale furto di account.
 
 **Focus tecnico**
@@ -169,7 +169,7 @@ Identificare utenti che accedono in fasce orarie anomale rispetto al loro storic
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Rilevamento ATM che comunicano su porte non autorizzate
+## 4-Rilevamento ATM che comunicano su porte non autorizzate
 Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste**. Qualsiasi deviazione è potenziale compromissione fisica o di rete.
 
 **Focus tecnico**
@@ -181,7 +181,7 @@ Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Rilevamento tentativi di brute-force sulle API del server
+## 5-Rilevamento tentativi di brute-force sulle API del server
 Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancario per individuare tentativi di accesso automatizzati.
 
 **Focus tecnico**
@@ -193,7 +193,7 @@ Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancar
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Correlazione tra anomalie di rete e degrado del servizio bancario
+## 6-Correlazione tra anomalie di rete e degrado del servizio bancario
 Analizzare se rallentamenti, timeout o interruzioni del servizio bancario coincidono con:
 - picchi di connessioni
 - scansioni di porte
@@ -209,7 +209,7 @@ Le banche subiscono spesso attacchi a bassa intensità che non buttano giù il s
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Rilevamento di pattern anomali nell’utilizzo delle API bancarie
+## 7-Rilevamento di pattern anomali nell’utilizzo delle API bancarie
 Analizzare il traffico diretto alle API del server bancario per individuare **utilizzi anomali o potenzialmente malevoli**, come:
 - chiamate API troppo frequenti
 - sequenze di endpoint non coerenti con il normale flusso applicativo
@@ -227,7 +227,7 @@ L’obiettivo è individuare **abusi delle API** che potrebbero indicare automaz
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Rilevamento di canali di comunicazione covert all’interno del traffico bancario
+## 8-Rilevamento di canali di comunicazione covert all’interno del traffico bancario
 Analizzare le connessioni di rete attive verso il server bancario per individuare sessioni che, pur utilizzando porte e protocolli **legittimi**, mostrano pattern **incompatibili** con il normale utilizzo dell’applicazione, come:
 - traffico minimo ma persistente
 - invio dati a intervalli regolari
