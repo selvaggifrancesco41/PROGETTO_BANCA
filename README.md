@@ -18,7 +18,7 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 
 ## Elenco dei problemi
 
-1. Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
+1. [Rilevamento di flussi anomali di bonifici in ingresso (AML)](#rilevamento-di-flussi-anomali-di-bonifici-in-ingresso-anti-money-laundering)
 
 
 
