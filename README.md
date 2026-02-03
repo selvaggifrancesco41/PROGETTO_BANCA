@@ -180,3 +180,12 @@ Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste
 
 ## Rilevamento tentativi di brute force sulle API del server
 Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancario per individuare tentativi di accesso automatizzati.
+
+**Focus tecnico**
+- **`netstat`**
+- **`ss`**
+- frequenza delle connessioni
+- porte specifiche
+
+- [Elenco dei problemi](#elenco-dei-problemi)
+---  
