@@ -178,4 +178,4 @@ Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-## Rilevamento tentativi di brute-force sulle API del server
+## Rilevamento tentativi di brute force sulle API del server
