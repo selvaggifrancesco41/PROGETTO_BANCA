@@ -21,6 +21,7 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 1. [Rilevamento di flussi anomali di bonifici in ingresso (AML)](#rilevamento-di-flussi-anomali-di-bonifici-in-ingresso-anti-money-laundering)
 2. [Individuazione di accessi simultanei sospetti dallo stesso account](#individuazione-di-accessi-simultanei-sospetti-dallo-stesso-account)
 3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
+4. [Rilevamento ATM che comunicano su porte non autorizzate](#rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
 
 
 ---
@@ -150,6 +151,7 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 - **`ss`**, **`lsof`**
 - correlazione indirizzo IP <-> customer_id
 
+- [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ### Analisi degli accessi notturni fuori dal profilo abituale
@@ -159,6 +161,18 @@ Identificare utenti che accedono in fasce orarie anomale rispetto al loro storic
 - timestamp
 - finestre temporali
 - nessuna interrogazione diretta al DB utenti
+
+- [Elenco dei problemi](#elenco-dei-problemi)
+---
+
+## Rilevamento ATM che comunicano su porte non autorizzate
+Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste**. Qualsiasi deviazione è potenziale compromissione fisica o di rete.
+
+**Focus tecnico**
+- **`ss -tulnp`**
+- **`nmap`**
+- porte & socket
+- subnet ATM dedicata
 
 
 
