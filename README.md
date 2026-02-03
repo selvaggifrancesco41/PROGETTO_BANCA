@@ -152,7 +152,7 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 - **`ss`**, **`lsof`**
 - correlazione indirizzo IP <-> customer_id
 
-### [Elenco dei problemi](#elenco-dei-problemi)
+## [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ### Analisi degli accessi notturni fuori dal profilo abituale
@@ -163,7 +163,7 @@ Identificare utenti che accedono in fasce orarie anomale rispetto al loro storic
 - finestre temporali
 - nessuna interrogazione diretta al DB utenti
 
-### [Elenco dei problemi](#elenco-dei-problemi)
+# [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## Rilevamento ATM che comunicano su porte non autorizzate
