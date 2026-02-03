@@ -25,6 +25,7 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 5. [Rilevamento tentativi di brute-force sulle API del server](#rilevamento-tentativi-di-brute-force-sulle-api-del-server)
 6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
 7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#rilevamento-di-pattern-anomali-nellutilizzo-delle-api-bancarie)
+8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#rilevamento-di-canali-di-comunicazione-covertallinterno-del-traffico-bancario)
 
 
 ---
@@ -226,3 +227,20 @@ L’obiettivo è individuare **abusi delle API** che potrebbero indicare automaz
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
+## Rilevamento di canali di comunicazione covert all’interno del traffico bancario
+Analizzare le connessioni di rete attive verso il server bancario per individuare sessioni che, pur utilizzando porte e protocolli **legittimi**, mostrano pattern **incompatibili** con il normale utilizzo dell’applicazione, come:
+- traffico minimo ma persistente
+- invio dati a intervalli regolari
+- durata della sessione sproporzionata rispetto alle operazioni eseguite
+
+L’obiettivo è identificare possibili **canali di comunicazione nascosti** all’interno del traffico bancario.
+
+**Focus tecnico**
+- **`ss -tan`**
+- durata socket **`ESTABLISHED`**
+- numero di byte trasmessi
+- frequenza connessioni
+- correlazione rete <-> azioni registrate
+
+### [Elenco dei problemi](#elenco-dei-problemi)
+---
