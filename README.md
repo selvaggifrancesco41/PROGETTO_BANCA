@@ -151,7 +151,9 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 - socket attivi
 - **`ss`**, **`lsof`**
 - correlazione indirizzo IP <-> customer_id
----
+----
+...
+--
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
