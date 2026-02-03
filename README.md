@@ -16,6 +16,27 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 
 ---
 
+## Obiettivi del progetto
+
+L’obiettivo del progetto è simulare un’infrastruttura bancaria operante su sistema GNU/Linux e analizzarne il comportamento dal punto di vista della rete, dei servizi esposti e delle interazioni tra client, ATM e componenti applicative.
+
+In particolare, il progetto si pone i seguenti obiettivi:
+
+- **simulare un ambiente bancario realistico**, includendo utenti, ATM, API applicative e servizi di rete;
+- **generare traffico controllato e plausibile** verso il server, anche tramite l’utilizzo di task schedulati;
+- **registrare** in modo strutturato **le richieste** ricevute e le azioni eseguite, mantenendo una traccia cronologica degli eventi;
+- **analizzare** porte, socket e connessioni attive per individuare anomalie, incoerenze e comportamenti sospetti;
+- **definire** e **risolvere** problematiche realistiche legate alla sicurezza, all’affidabilità e alle prestazioni di un sistema bancario;
+- utilizzare prevalentemente strumenti e **comandi di rete** tipici degli ambienti GNU/Linux, riducendo al minimo l’interrogazione diretta dei dati applicativi;
+- **progettare soluzioni** tramite script Bash modulari, *riutilizzabili* e *adattabili* a contesti simili.
+
+L’approccio adottato mira a riprodurre scenari e criticità reali, ponendo l’attenzione non solo sulle singole operazioni, ma soprattutto sulla coerenza tra comportamento applicativo e contesto infrastrutturale.
+
+**L’analisi dei problemi viene effettuata attraverso l’individuazione e la definizione di 10 problematiche distinte, coerenti con il contesto simulato e finalizzate all’analisi del comportamento di rete e dei servizi del sistema.**
+
+
+---
+
 ## Elenco dei problemi
 
 1. [Rilevamento di flussi anomali di bonifici in ingresso (AML)](#1-rilevamento-di-flussi-anomali-di-bonifici-in-ingresso-anti-money-laundering)
@@ -26,6 +47,8 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#6-correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
 7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#7-rilevamento-di-pattern-anomali-nellutilizzo-delle-api-bancarie)
 8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#8-rilevamento-di-canali-di-comunicazione-covert-allinterno-del-traffico-bancario)
+9. [Rilevamento di incoerenze tra contesto di rete e tipologia di operazione](#9-rilevamento-di-incoerenze-tra-contesto-di-rete-e-tipologia-di-operazione)
+10. [Rilevamento di comportamenti “silenziosi” ad alto impatto (Low & Slow)](#10-rilevamento-di-comportamenti-silenziosi-ad-alto-impatto)
 
 
 ---
@@ -244,3 +267,68 @@ L’obiettivo è identificare possibili **canali di comunicazione nascosti** all
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
+
+## 9-Rilevamento di incoerenze tra contesto di rete e tipologia di operazione
+Analizzare le richieste ricevute dal server bancario per individuare operazioni che, pur essendo formalmente corrette, risultano incoerenti con il contesto di rete da cui provengono.
+L’analisi correla:
+- tipologia di operazione eseguita
+- indirizzo IP sorgente
+- porta e servizio utilizzato
+
+L’obiettivo è identificare **uso improprio dei canali di accesso**, potenziale indicatore di compromissione o di abuso dei servizi bancari., visto che molte frodi passano perchè l'operazione è valida, ma il **canale è sbagliato**
+
+**Focus tecnico**
+- **`ss -tuln`**
+- **`lsof -i`**
+- correlazione IP <-> porta <-> azione
+- whitelist logica dei canali
+
+### [Elenco dei problemi](#elenco-dei-problemi)
+---
+
+## 10-Rilevamento di comportamenti “silenziosi” ad alto impatto
+Non tutti gli attacchi sono visibili a primo impatto.
+In banca, i più pericolosi sono quelli **lenti, distribuiti e apparentemente innocui**.
+
+Analizzare l’evoluzione temporale delle connessioni e delle richieste al server bancario per individuare comportamenti anomali caratterizzati da bassa intensità ma alta persistenza.
+L’analisi mira a rilevare pattern che, pur non superando soglie critiche istantanee, producono nel tempo un impatto significativo sulle risorse di rete e sui servizi esposti.
+
+L’obiettivo è individuare **abusi graduali e difficili da rilevare**, tipici degli attacchi mirati a infrastrutture critiche.
+
+Vengono individuati comportamenti a basso impatto immediato che:
+- non generano errori
+- non saturano il server
+- non violano regole evidenti
+
+Attacchi del genere seguono un **pattern ben preciso**:
+- poche connessioni per volta
+- sempre valide
+- sempre sulle porte corrette
+- distribuite nel tempo
+
+I risultati sono i seguenti:
+- aumento graduale dei socket attivi
+- degrado delle performance del server
+- difficoltà a distinguere traffico legittimo da abuso
+
+**Focus tecnico**
+- **`ss -tan`**
+- conteggio socket nel tempo
+- porte e servizi
+- correlazione con degrado simulato del servizio
+
+### [Elenco dei problemi](#elenco-dei-problemi)
+---
+---
+
+## Conclusioni
+
+Il progetto ha simulato un’infrastruttura bancaria operante su sistema GNU/Linux, concentrandosi sull’analisi del comportamento di rete, dei servizi esposti e delle interazioni tra client, ATM e API applicative.
+
+Attraverso la generazione controllata di traffico e l’analisi di porte, socket e connessioni attive, sono stati individuati e affrontati diversi scenari critici realistici, tipici di contesti bancari e di infrastrutture critiche.  
+I problemi analizzati non si limitano alla semplice estrazione di dati, ma mirano a correlare il contesto di rete con il comportamento applicativo, evidenziando anomalie che, in un ambiente reale, potrebbero indicare frodi, compromissioni o configurazioni errate.
+
+Le soluzioni proposte sono state implementate tramite script Bash modulari e riutilizzabili, progettati per essere eseguiti in ambienti GNU/Linux standard e facilmente adattabili a scenari simili.  
+L’approccio adottato privilegia l’analisi comportamentale e infrastrutturale rispetto alla semplice interrogazione dei dati, in linea con le pratiche reali di monitoraggio e sicurezza dei sistemi bancari.
+
+Il progetto dimostra come, anche in un contesto simulato, sia possibile applicare metodologie e strumenti concreti per l’analisi e la protezione di sistemi complessi.
