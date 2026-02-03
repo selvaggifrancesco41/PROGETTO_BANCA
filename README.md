@@ -139,7 +139,7 @@ Dove **`source_type`** può assumere valori come:
 Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
 Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
 
-[Elenco dei problemi](#elenco-dei-problemi)
+- [Elenco dei problemi](#elenco-dei-problemi)
 --- 
 
 ### Individuazione di accessi simultanei sospetti dallo stesso account
