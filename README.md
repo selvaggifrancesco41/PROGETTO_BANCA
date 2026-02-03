@@ -148,9 +148,9 @@ Il sistema analizza il database degli eventi, individua i conti potenzialmente s
 Rilevare utenti che risultano attivi sul server con più **sessioni contemporanee provenienti da IP diversi**, possibile compromissione delle credenziali.
 
 **Focus tecnico**
-- socket attivi
-- **`ss`**, **`lsof`**
-- correlazione indirizzo IP <-> customer_id
+1. socket attivi
+2. **`ss`**, **`lsof`**
+3. correlazione indirizzo IP <-> customer_id
 
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
