@@ -25,7 +25,7 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 5. [Rilevamento tentativi di brute-force sulle API del server](#rilevamento-tentativi-di-brute-force-sulle-api-del-server)
 6. [Correlazione tra anomalie di rete e degrado del servizio bancario](#correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
 7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](#rilevamento-di-pattern-anomali-nellutilizzo-delle-api-bancarie)
-8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#rilevamento-di-canali-di-comunicazione-covertallinterno-del-traffico-bancario)
+8. [Rilevamento di canali di comunicazione covert all’interno del traffico bancario](#rilevamento-di-canali-di-comunicazione-covert-allinterno-del-traffico-bancario)
 
 
 ---
