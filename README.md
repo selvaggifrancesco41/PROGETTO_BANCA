@@ -140,8 +140,13 @@ Il sistema analizza il database degli eventi, individua i conti potenzialmente s
 
 --- 
 
-### 2. Individuazione di accessi simultanei sospetti dallo stesso account
+### Individuazione di accessi simultanei sospetti dallo stesso account
+Rilevare utenti che risultano attivi sul server con più **sessioni contemporanee provenienti da IP diversi**, possibile compromissione delle credenziali.
 
+**Focus tecnico**
+- socket attivi
+- **`ss`**, **`lsof`**
+- correlazione indirizzo IP <-> customer_id
 
 
 
