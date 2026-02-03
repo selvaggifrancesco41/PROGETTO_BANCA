@@ -141,6 +141,7 @@ Dove **`source_type`** può assumere valori come:
 Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
 Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
 
+--
 - [Elenco dei problemi](#elenco-dei-problemi)
 --- 
 
@@ -151,8 +152,7 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 - socket attivi
 - **`ss`**, **`lsof`**
 - correlazione indirizzo IP <-> customer_id
-----
-...
+
 --
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
@@ -165,6 +165,7 @@ Identificare utenti che accedono in fasce orarie anomale rispetto al loro storic
 - finestre temporali
 - nessuna interrogazione diretta al DB utenti
 
+--
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
@@ -177,6 +178,7 @@ Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste
 - porte & socket
 - subnet ATM dedicata
 
+--
 - [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
@@ -189,5 +191,6 @@ Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancar
 - frequenza delle connessioni
 - porte specifiche
 
+--
 - [Elenco dei problemi](#elenco-dei-problemi)
----  
+---
