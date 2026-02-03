@@ -23,6 +23,8 @@ L’intero scenario riproduce una situazione **plausibile e credibile** che potr
 3. [Analisi degli accessi notturni fuori dal profilo abituale](#analisi-degli-accessi-notturni-fuori-dal-profilo-abituale)
 4. [Rilevamento ATM che comunicano su porte non autorizzate](#rilevamento-atm-che-comunicano-su-porte-non-autorizzate)
 5. [Rilevamento tentativi di brute-force sulle API del server](#rilevamento-tentativi-di-brute-force-sulle-api-del-server)
+6. [Correlazione tra anomalie di rete e degrado del servizio bancario](correlazione-tra-anomalie-di-rete-e-degrado-del-servizio-bancario)
+7. [Rilevamento di pattern anomali nell’utilizzo delle API bancarie](rilevamento-di-pattern-anomali-nell-utilizzo-delle-api-bancarie)
 
 
 ---
@@ -189,3 +191,38 @@ Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancar
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
+
+## Correlazione tra anomalie di rete e degrado del servizio bancario
+Analizzare se rallentamenti, timeout o interruzioni del servizio bancario coincidono con:
+- picchi di connessioni
+- scansioni di porte
+- aumento anomalo dei socket attivi
+Le banche subiscono spesso attacchi a bassa intensità che non buttano giù il servizio, ma lo degradano.
+
+**Focus tecnico**
+- numero di socket
+- stato porte
+- traffico locale
+- simulazione stress controllato
+
+### [Elenco dei problemi](#elenco-dei-problemi)
+---
+
+## Rilevamento di pattern anomali nell’utilizzo delle API bancarie
+Analizzare il traffico diretto alle API del server bancario per individuare **utilizzi anomali o potenzialmente malevoli**, come:
+- chiamate API troppo frequenti
+- sequenze di endpoint non coerenti con il normale flusso applicativo
+- utilizzo delle API da IP non autorizzati o fuori contesto (es. IP ATM che invocano API web)
+
+L’obiettivo è individuare **abusi delle API** che potrebbero indicare automazioni fraudolente, reverse engineering dell’app o tentativi di bypass dei controlli applicativi.
+
+**Focus tecnico**
+- **`curl`** -> generazione richieste
+- **`ss -tuln`**, **`ss -tan`** -> socket API
+- **`lsof -i`** -> processi in ascolto
+- **`nmap`** -> esposizione endpoint
+- analisi **porte** + **rete**, non DB
+
+### [Elenco dei problemi](#elenco-dei-problemi)
+---
+
