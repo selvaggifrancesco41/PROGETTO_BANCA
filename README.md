@@ -135,7 +135,7 @@ la maggior parte delle analisi viene effettuata **senza interrogare direttamente
 
 Il progetto include la simulazione di **dispositivi fisici bancari**, in particolare **ATM (Automated Teller Machine)**, che interagiscono con il server tramite rete, analogamente a quanto avverrebbe in un contesto reale.
 
-Gli ATM simulati utilizzano una subnet dedicata **`(192.168.100.0/24)`**, separata dal traffico degli utenti, al fine di **facilitare l’analisi** delle connessioni di rete e l’individuazione di comportamenti anomali.”
+Gli ATM simulati utilizzano una subnet dedicata **`(192.168.100.0/24)`**, separata dal traffico degli utenti, al fine di **facilitare l’analisi** delle connessioni di rete e l’individuazione di comportamenti anomali.
 
 Gli ATM sono trattati come **entità distinte dagli utenti finali**, caratterizzate da:
 - indirizzo IP dedicato
@@ -163,14 +163,14 @@ Dove **`source_type`** può assumere valori come:
 
 # Problemi affrontati:
 
-### 1-Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
+## 1-Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
 Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
 Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 --- 
 
-### 2-Individuazione di accessi simultanei sospetti dallo stesso account
+## 2-Individuazione di accessi simultanei sospetti dallo stesso account
 Rilevare utenti che risultano attivi sul server con più **sessioni contemporanee provenienti da IP diversi**, possibile compromissione delle credenziali.
 
 **Focus tecnico**
@@ -181,7 +181,7 @@ Rilevare utenti che risultano attivi sul server con più **sessioni contemporane
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
-### 3-Analisi degli accessi notturni fuori dal profilo abituale
+## 3-Analisi degli accessi notturni fuori dal profilo abituale
 Identificare utenti che accedono in fasce orarie anomale rispetto al loro storico, potenziale furto di account.
 
 **Focus tecnico**
@@ -221,6 +221,7 @@ Analizzare se rallentamenti, timeout o interruzioni del servizio bancario coinci
 - picchi di connessioni
 - scansioni di porte
 - aumento anomalo dei socket attivi
+
 Le banche subiscono spesso attacchi a bassa intensità che non buttano giù il servizio, ma lo degradano.
 
 **Focus tecnico**
@@ -275,7 +276,7 @@ L’analisi correla:
 - indirizzo IP sorgente
 - porta e servizio utilizzato
 
-L’obiettivo è identificare **uso improprio dei canali di accesso**, potenziale indicatore di compromissione o di abuso dei servizi bancari., visto che molte frodi passano perchè l'operazione è valida, ma il **canale è sbagliato**
+L’obiettivo è identificare **uso improprio dei canali di accesso**, potenziale indicatore di compromissione o di abuso dei servizi bancari, visto che molte frodi passano perchè l'operazione è valida, ma il **canale è sbagliato**
 
 **Focus tecnico**
 - **`ss -tuln`**
