@@ -529,18 +529,91 @@ Strumenti e comandi chiave:
 ---
 
 ## 6-Correlazione tra anomalie di rete e degrado del servizio bancario
-Analizzare se rallentamenti, timeout o interruzioni del servizio bancario coincidono con:
-- picchi di connessioni
-- scansioni di porte
-- aumento anomalo dei socket attivi
+In un sistema bancario reale, i problemi più complessi non sono quelli che causano un’interruzione immediata del servizio, ma quelli che **ne degradano progressivamente la qualità** senza generare errori evidenti.
 
-Le banche subiscono spesso attacchi a bassa intensità che non buttano giù il servizio, ma lo degradano.
+Questo tipo di situazione è particolarmente critico perché:
+- i servizi risultano formalmente attivi
+- le porte sono aperte
+- le API rispondono
+- i clienti riescono comunque a operare
+Eppure, l’esperienza utente peggiora nel tempo.
 
-**Focus tecnico**
-- numero di socket
-- stato porte
-- traffico locale
-- simulazione stress controllato
+Questo problema affronta il tema della **correlazione tra fenomeni di rete apparentemente innocui e il degrado misurabile del servizio bancario**.
+
+### Scenario operativo
+
+Il problema si manifesta quando:
+- il server bancario risulta raggiungibile
+- non vengono rilevati crash o errori critici
+- i servizi restano in ascolto sulle porte previste
+- i log applicativi non segnalano anomalie gravi
+
+Tuttavia, si osservano:
+- aumento dei tempi di risposta
+- rallentamenti nelle operazioni bancarie
+- sessioni più lunghe del normale
+- timeout sporadici lato client
+Dal punto di vista applicativo, il problema NON è immediatamente diagnosticabile.
+
+### Obiettivo dell’analisi
+
+Individuare:
+- anomalie di rete
+- crescita del numero di connessioni
+- aumento dei socket attivi
+- utilizzo anomalo delle porte
+contribuiscano al degrado progressivo del servizio bancario.
+
+L’obiettivo non è identificare un singolo evento, ma **dimostrare una relazione causale o temporale** tra:
+- stato della rete
+- comportamento dei servizi
+- qualità del servizio percepita
+
+### Caratteristiche del comportamento osservato
+
+I pattern tipici includono:
+- crescita graduale delle connessioni TCP
+- socket che rimangono aperti più a lungo del previsto
+- aumento delle connessioni in stato **`ESTABLISHED`**
+- maggiore occupazione delle porte critiche
+
+Ulteriori indicatori:
+- backlog di connessioni
+- aumento delle connessioni in **`TIME_WAIT`**
+- riduzione della capacità di accettare nuove richieste
+- rallentamenti anche in assenza di picchi di traffico
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- correlare metriche di rete con degrado del servizio
+- distinguere carico legittimo da abuso
+- identificare colli di bottiglia a livello di socket
+- giustificare interventi correttivi infrastrutturali
+
+I risultati possono portare a:
+- ottimizzazione della gestione delle connessioni
+- revisione dei timeout
+- tuning dei servizi esposti
+- miglioramento delle policy di monitoraggio
+
+### Focus tecnico
+
+La risoluzione del problema richiede analisi temporale e comparativa, non una singola fotografia dello stato del sistema.
+
+Attività principali:
+- monitoraggio continuo delle connessioni
+- confronto tra periodi di funzionamento normale e degradato
+- conteggio dei socket nel tempo
+- analisi dello stato delle porte critiche
+
+Strumenti e comandi chiave:
+- **`ss -tan`**
+- **`ss -s`**
+- **`netstat -ant`**
+- conteggio socket nel tempo
+- **`lsof -i -P -n`**
+correlazione con degrado simulato del servizio
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
