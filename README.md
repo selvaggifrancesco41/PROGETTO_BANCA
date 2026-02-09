@@ -164,54 +164,366 @@ Dove **`source_type`** può assumere valori come:
 # Problemi affrontati:
 
 ## 1-Rilevamento di flussi anomali di bonifici in ingresso (Anti-Money Laundering)
-Identificare automaticamente gli utenti che ricevono un numero elevato di bonifici in un breve intervallo di tempo da IBAN differenti.
-Il sistema analizza il database degli eventi, individua i conti potenzialmente sospetti e invia una comunicazione di verifica all’utente per prevenire frodi o attività di riciclaggio.
+Nel contesto bancario moderno, una delle principali minacce non deriva da singole operazioni chiaramente fraudolente, ma da **schemi di trasferimento distribuiti**, progettati per aggirare i controlli automatici antiriciclaggio (AML).
+Un conto corrente può apparire perfettamente legittimo se analizzato superficialmente, ma diventare sospetto quando si osserva il **comportamento aggregato dei bonifici in ingresso nel tempo**. In particolare, la ricezione ravvicinata di fondi provenienti da **IBAN diversi e non correlati** può indicare attività di money laundering, layering o utilizzo del conto come nodo di smistamento.
+
+### Scenario operativo
+
+Il problema si manifesta quando un cliente riceve, in un intervallo temporale ristretto:
+
+- numerosi bonifici di importo medio-basso
+- provenienti da conti diversi
+- senza una relazione evidente tra mittenti e beneficiario
+
+Ogni singola transazione risulta formalmente valida, autorizzata e coerente con le regole di sistema. Tuttavia, l’insieme delle operazioni evidenzia un **pattern anomalo** rispetto al profilo abituale del conto.
+
+
+### Obiettivo dell’analisi
+
+Analizzare i flussi di bonifici in ingresso per individuare conti che presentano comportamenti compatibili con attività sospette, senza basarsi esclusivamente su soglie statiche di importo.
+
+L’analisi mira a:
+
+- rilevare concentrazioni anomale di bonifici nel tempo
+- correlare numero di mittenti unici e frequenza delle transazioni
+- confrontare il comportamento attuale con lo storico del conto
+
+L’obiettivo finale è **segnalare il conto come potenzialmente sospetto** e attivare misure di verifica preventiva, come l’invio di comunicazioni al cliente o l’escalation verso sistemi AML.
+
+### Caratteristiche del comportamento sospetto
+
+I conti individuati presentano tipicamente:
+- molti mittenti diversi
+- importi sotto le soglie di alert tradizionali
+- operazioni distribuite su finestre temporali brevi
+- assenza di una causale coerente o ricorrente
+
+Questo tipo di attività è progettato per **non generare allarmi immediati**, ma risulta anomala se osservata in modo correlato.
+
+### Risultati dell’analisi
+
+L’analisi consente di individuare:
+- conti con elevata entropia dei mittenti
+- picchi improvvisi nel numero di bonifici in ingresso
+- deviazioni significative rispetto al comportamento storico
+- potenziali nodi di smistamento finanziario
+
+### Focus tecnico
+
+L’implementazione del problema prevede:
+- analisi del file CSV delle transazioni
+- raggruppamento per IBAN beneficiario
+- conteggio mittenti unici su finestre temporali
+- correlazione tra frequenza, importi e tempo
+- generazione di alert e log dedicati
+
+
+### Strumenti e concetti chiave:
+- parsing e analisi log applicativi
+- finestre temporali scorrevoli
+- metriche comportamentali
+- simulazione di alert AML
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 --- 
 
 ## 2-Individuazione di accessi simultanei sospetti dallo stesso account
-Rilevare utenti che risultano attivi sul server con più **sessioni contemporanee provenienti da IP diversi**, possibile compromissione delle credenziali.
+In un sistema bancario distribuito, l’accesso contemporaneo allo stesso account da più punti della rete rappresenta uno dei segnali più affidabili di **compromissione delle credenziali**. A differenza degli attacchi rumorosi, questo tipo di scenario può passare inosservato se non viene analizzato a livello di **correlazione temporale e di contesto di rete**.
 
-**Focus tecnico**
-- socket attivi
-- **`ss`**, **`lsof`**
-- correlazione indirizzo IP <-> customer_id
+Un singolo login valido non è mai di per sé sospetto. Il problema emerge quando lo **stesso account risulta attivo in più sessioni sovrapposte**, provenienti da indirizzi IP o segmenti di rete differenti.
+
+### Scenario operativo
+
+Il problema si verifica quando:
+- un utente effettua un accesso legittimo
+- senza disconnettersi, viene aperta un’altra sessione
+- le sessioni risultano attive nello stesso intervallo temporale
+- le connessioni provengono da IP diversi o da subnet non correlate
+
+Dal punto di vista applicativo, tutte le richieste risultano corrette: credenziali valide, token corretti, nessun errore di autenticazione. Tuttavia, il comportamento globale **non è coerente con un utilizzo umano normale**.
+
+### Obiettivo dell’analisi
+
+Individuare situazioni in cui un account bancario risulta utilizzato simultaneamente da più origini, suggerendo:
+- furto di credenziali
+- condivisione non autorizzata dell’account
+- accesso da malware o script automatizzati
+
+L’obiettivo è identificare **overlap temporali tra sessioni attive**, prima che l’account venga utilizzato per operazioni fraudolente.
+
+### Caratteristiche del comportamento sospetto
+
+Gli account sospetti presentano tipicamente:
+- più sessioni attive contemporaneamente
+- IP di origine differenti
+- sessioni che non seguono un pattern di logout/login
+- operazioni bancarie eseguite in parallelo
+
+In particolare, il rischio aumenta quando:
+- le sessioni insistono su reti diverse
+- le azioni vengono eseguite quasi in simultanea
+- l’utente non ha mai mostrato questo comportamento in passato
+
+### Risultati dell’analisi
+
+L’analisi consente di individuare:
+- account con sessioni sovrapposte
+- anomalie nella gestione delle sessioni
+- potenziali compromissioni silenziose
+- utilizzo fraudolento in tempo reale
+
+I conti identificati possono essere soggetti a:
+- invalidazione forzata delle sessioni
+- richiesta di verifica aggiuntiva
+- blocco temporaneo dell’account
+
+### Focus tecnico
+
+L’implementazione del problema prevede:
+- analisi dei log di autenticazione
+- tracciamento delle sessioni attive
+- correlazione temporale tra login e logout
+- associazione sessione–IP–timestamp
+- rilevamento di overlap temporali
+
+Strumenti e concetti chiave:
+- parsing dei log di accesso
+- gestione delle sessioni applicative
+- correlazione temporale
+- analisi per account
+- simulazione di alert di sicurezza
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## 3-Analisi degli accessi notturni fuori dal profilo abituale
-Identificare utenti che accedono in fasce orarie anomale rispetto al loro storico, potenziale furto di account.
+In ambito bancario, il **fattore temporale** è uno degli indicatori più sottovalutati ma allo stesso tempo più potenti per l’individuazione di comportamenti anomali. Un accesso tecnicamente corretto può diventare sospetto se avviene **in una fascia oraria incompatibile con il profilo storico dell’utente**.
+Questo problema non riguarda l’accesso simultaneo né la validità delle credenziali, ma la **coerenza temporale** dell’attività rispetto alle abitudini consolidate del cliente.
 
-**Focus tecnico**
-- timestamp
-- finestre temporali
-- nessuna interrogazione diretta al DB utenti
+### Scenario operativo
+
+Il problema emerge quando:
+- un account effettua accessi in orari notturni o atipici
+- tali accessi non risultano coerenti con il comportamento passato
+- le operazioni eseguite sono formalmente legittime
+- non vengono generati errori o alert automatici
+
+Ad esempio, un cliente che opera abitualmente tra le 8:00 e le 20:00, con attività sporadica e prevedibile, improvvisamente accede ripetutamente tra le 2:00 e le 4:00 del mattino.
+
+Dal punto di vista del server, **non c’è alcuna violazione** evidente: autenticazione valida, richieste corrette, traffico regolare.
+
+### Obiettivo dell’analisi
+
+Individuare accessi che risultano **statisticamente anomali** rispetto al profilo temporale dell’utente, al fine di:
+- rilevare account compromessi
+- identificare utilizzo da script automatizzati
+- intercettare accessi fraudolenti a basso rumore
+
+L’obiettivo non è bloccare tutti gli accessi notturni, ma **separare quelli plausibili da quelli incoerenti**.
+
+### Caratteristiche del comportamento sospetto
+
+Gli account sospetti mostrano tipicamente:
+- accessi concentrati in fasce orarie insolite
+- assenza di attività simile nei periodi precedenti
+- operazioni bancarie effettuate subito dopo il login
+- ripetizione del pattern su più notti
+
+Ulteriori segnali di rischio includono:
+- accessi notturni seguiti da bonifici o modifiche sensibili
+- variazioni improvvise del ritmo di utilizzo
+- combinazione con IP o reti mai usate prima
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- costruire un profilo temporale per ogni utente
+- individuare deviazioni significative
+- classificare accessi come “atipici”
+- attivare controlli aggiuntivi solo dove necessario
+
+I risultati possono portare a:
+- segnalazioni di rischio
+- richiesta di verifica dell’identità
+- monitoraggio rafforzato dell’account
+
+### Focus tecnico
+
+La risoluzione del problema prevede:
+- analisi dei timestamp di login
+- aggregazione degli accessi per fascia oraria
+- costruzione di baseline temporali per account
+- confronto tra attività corrente e storica
+- rilevamento di outlier temporali
+
+Strumenti e concetti chiave:
+- parsing dei log di accesso
+- analisi statistica delle fasce orarie
+- correlazione temporale
+- profiling comportamentale
+- simulazione di policy di sicurezza adattive
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## 4-Rilevamento ATM che comunicano su porte non autorizzate
-Verificare che gli IP riservati agli ATM comunichino **solo sulle porte previste**. Qualsiasi deviazione è potenziale compromissione fisica o di rete.
+In un’infrastruttura bancaria reale, gli **ATM rappresentano nodi critici e altamente controllati**. Il loro comportamento di rete è fortemente standardizzato: comunicano con servizi ben definiti, su porte specifiche, con pattern di traffico prevedibili.
+Qualsiasi deviazione da questo modello è un **segnale di rischio elevato**, anche in assenza di errori o malfunzionamenti apparenti.
+Questo problema si concentra sull’analisi del **comportamento di rete degli ATM**, non sul contenuto delle transazioni.
 
-**Focus tecnico**
-- **`ss -tulnp`**
-- **`nmap`**
-- porte & socket
-- subnet ATM dedicata
+### Scenario operativo
+
+Il problema si manifesta quando:
+- un ATM risulta attivo e operativo
+- le operazioni effettuate sono formalmente valide
+- il traffico di rete avviene su porte non previste
+- non vengono generati errori applicativi
+
+Ad esempio, un ATM che dovrebbe comunicare esclusivamente con il server bancario su una porta dedicata inizia ad aprire connessioni su porte alte o non documentate.
+
+Dal punto di vista funzionale, **il servizio continua a operare**, rendendo il problema difficile da individuare senza un’analisi di rete mirata.
+
+### Obiettivo dell’analisi
+
+Individuare ATM che:
+- utilizzano porte di comunicazione non autorizzate
+- instaurano socket inattesi
+- presentano pattern di rete incompatibili con il profilo assegnato
+
+L’obiettivo è rilevare:
+- compromissioni dell’ATM
+- malware o software non autorizzato
+- tunneling o canali di comunicazione non previsti
+- errori di configurazione critici
+
+### Caratteristiche del comportamento sospetto
+
+Gli ATM anomali mostrano tipicamente:
+- porte di destinazione diverse da quelle standard
+- connessioni persistenti non documentate
+- tentativi di connessione ripetuti su porte non consentite
+- differenze di comportamento rispetto ad altri ATM
+
+Ulteriori segnali includono:
+- attività di rete in orari insoliti
+- traffico verso servizi non bancari
+- variazioni improvvise nel numero di socket aperti
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- identificare ATM fuori policy
+- mappare porte e servizi effettivamente utilizzati
+- confrontare il comportamento tra più ATM
+- isolare dispositivi potenzialmente compromessi
+
+I risultati possono portare a:
+- disabilitazione preventiva dell’ATM
+- alert di sicurezza ad alta priorità
+- revisione delle regole di firewalling
+- audit della configurazione di rete
+
+### Focus tecnico
+
+La risoluzione del problema si basa prevalentemente su **strumenti di rete**, senza interrogazioni dirette al database.
+
+Attività principali:
+- monitoraggio delle porte in ascolto
+- analisi delle connessioni attive
+- verifica dei servizi esposti
+- confronto con le policy definite
+
+Strumenti e comandi chiave:
+- **`ss -tuln`**
+- **`ss -tan`**
+- **`netstat -tulnp`**
+- **`lsof -i -P -n`**
+- **`sudo lsof -i -P -n | grep LISTEN`**
+- **`nmap localhost`**
+- **`sudo nmap -p- localhost`**
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## 5-Rilevamento tentativi di brute-force sulle API del server
-Analizzare connessioni ripetute e ravvicinate verso le porte del servizio bancario per individuare tentativi di accesso automatizzati.
+In un’architettura bancaria moderna, le **API rappresentano uno dei punti di esposizione più critici**. Anche quando correttamente protette da autenticazione e rate limiting, restano un bersaglio privilegiato per attacchi automatizzati e distribuiti.
+A differenza degli attacchi diretti ai servizi web tradizionali, i tentativi di brute-force sulle API sono spesso **silenziosi, frammentati e mascherati da traffico legittimo**.
 
-**Focus tecnico**
-- **`netstat`**
-- **`ss`**
-- frequenza delle connessioni
-- porte specifiche
+Questo problema si concentra sull’analisi del traffico di rete e delle connessioni verso le API, non sulla validità delle credenziali.
+
+### Scenario operativo
+
+Il problema emerge quando:
+- le API risultano operative e rispondono correttamente
+- non vengono generati errori evidenti lato server
+- le richieste rispettano il formato previsto
+- il volume complessivo non supera soglie critiche
+
+Tuttavia, osservando il traffico nel tempo, si nota una **ripetizione sistematica di richieste di autenticazione** o di accesso a endpoint sensibili, spesso provenienti da:
+- pochi indirizzi IP
+- intervalli temporali regolari
+- connessioni brevi ma frequenti
+
+Dal punto di vista applicativo, tutto sembra funzionare normalmente. Il problema è **visibile solo a livello di rete e socket**.
+
+### Obiettivo dell’analisi
+
+Individuare tentativi di brute-force che:
+- non saturano il server
+- non causano crash o errori
+- non violano regole statiche di firewall
+- sfruttano la legittimità delle API
+
+L’obiettivo è distinguere:
+- utilizzo normale delle API
+- test automatizzati legittimi
+- attacchi di enumerazione delle credenziali
+- tentativi di accesso ripetuti e sistematici
+
+### Caratteristiche del comportamento sospetto
+
+I pattern tipici includono:
+- elevato numero di connessioni brevi verso le stesse API
+- frequenti aperture e chiusure di socket
+- richieste concentrate su endpoint di login o token
+- traffico costante anche in orari non operativi
+
+Ulteriori indicatori:
+- stesso IP o subnet che colpisce più endpoint
+- crescita graduale delle connessioni
+- assenza di traffico “funzionale” successivo (es. operazioni bancarie reali)
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- identificare IP o nodi sospetti
+- individuare endpoint API maggiormente bersagliati
+- correlare tentativi ripetuti con degrado delle risorse
+- supportare decisioni di blocco o limitazione
+
+I risultati possono portare a:
+- attivazione di rate limiting più restrittivo
+- blocco temporaneo di indirizzi IP
+- revisione delle politiche di accesso alle API
+- miglioramento del monitoring proattivo
+
+### Focus tecnico
+
+La risoluzione del problema è fortemente orientata all’**analisi delle connessioni di rete**, senza necessità di interrogare direttamente il database utenti.
+
+Attività principali:
+- monitoraggio delle connessioni verso le API
+- conteggio delle richieste nel tempo
+- analisi della persistenza dei socket
+- individuazione di pattern ripetitivi
+
+Strumenti e comandi chiave:
+- **`ss -tan`**
+- **`ss -tan | grep :<porta_api>`**
+- **`netstat -ant`**
+- **`lsof -i -P -n`**
+- **`curl`** (per simulare richieste)
+- **`nc`** (per test di connessione)
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
