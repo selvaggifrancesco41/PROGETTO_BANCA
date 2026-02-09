@@ -619,55 +619,268 @@ correlazione con degrado simulato del servizio
 ---
 
 ## 7-Rilevamento di pattern anomali nell’utilizzo delle API bancarie
-Analizzare il traffico diretto alle API del server bancario per individuare **utilizzi anomali o potenzialmente malevoli**, come:
-- chiamate API troppo frequenti
-- sequenze di endpoint non coerenti con il normale flusso applicativo
-- utilizzo delle API da IP non autorizzati o fuori contesto (es. IP ATM che invocano API web)
+In un sistema bancario moderno, le API non sono utilizzate tutte allo stesso modo. Ogni tipologia di client (app mobile, ATM, servizi interni, integrazioni esterne) presenta **pattern di utilizzo distinti**, prevedibili e ripetibili nel tempo.
 
-L’obiettivo è individuare **abusi delle API** che potrebbero indicare automazioni fraudolente, reverse engineering dell’app o tentativi di bypass dei controlli applicativi.
+Quando questi pattern vengono alterati, anche senza generare errori o picchi evidenti, possono indicare:
+- abuso delle API
+- automazione non autorizzata
+- utilizzo improprio di endpoint sensibili
+- compromissione parziale di credenziali
 
-**Focus tecnico**
-- **`curl`** -> generazione richieste
-- **`ss -tuln`**, **`ss -tan`** -> socket API
-- **`lsof -i`** -> processi in ascolto
-- **`nmap`** -> esposizione endpoint
-- analisi **porte** + **rete**, non DB
+Questo problema si concentra sull’**analisi comportamentale dell’uso delle API**, osservata dal punto di vista della rete.
+
+### Scenario operativo
+
+Il problema emerge quando:
+- le API risultano operative
+- le risposte sono formalmente corrette
+- non si registrano errori applicativi
+- il traffico rientra in volumi apparentemente normali
+
+Tuttavia, l’osservazione nel tempo rivela:
+- sequenze di chiamate atipiche
+- uso ripetuto di endpoint non coerenti con il profilo del client
+- mancanza di operazioni successive “logiche”
+- traffico API concentrato su specifiche funzionalità
+
+Dal punto di vista applicativo, il comportamento può sembrare legittimo. A livello di rete, invece, emergono **schemi anomali**.
+
+### Obiettivo dell’analisi
+
+Individuare utilizzi delle API che:
+- non rispettano il flusso funzionale previsto
+- mostrano una sequenza ripetitiva e meccanica
+- differiscono dal comportamento medio degli utenti
+- risultano incompatibili con il contesto operativo
+
+L’obiettivo è distinguere:
+- utilizzo normale delle API
+- automazioni lecite
+- test o integrazioni errate
+- sfruttamento sistematico delle API
+
+### Caratteristiche del comportamento sospetto
+
+I pattern anomali includono:
+- chiamate ripetute agli stessi endpoint
+- assenza di variabilità nelle richieste
+- utilizzo intenso di endpoint informativi
+- frequente apertura e chiusura di connessioni
+
+Ulteriori indicatori:
+- utilizzo delle API in orari inconsueti
+- numero elevato di richieste senza operazioni bancarie reali
+- concentrazione del traffico su un sottoinsieme di endpoint
+- pattern temporali regolari (tipici di script automatizzati)
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- individuare comportamenti API non coerenti
+- separare traffico umano da traffico automatizzato
+- identificare endpoint particolarmente esposti
+- supportare decisioni di limitazione o revisione
+
+I risultati possono portare a:
+- introduzione di controlli comportamentali
+- limitazione di endpoint sensibili
+- revisione della documentazione API
+- rafforzamento delle politiche di sicurezza
+
+### Focus tecnico
+
+L’analisi è prevalentemente basata su **osservazione del traffico e delle connessioni**, senza analizzare il payload delle richieste.
+
+Attività principali:
+- analisi della frequenza delle connessioni
+- osservazione delle sequenze di chiamate
+- confronto tra diversi profili di utilizzo
+- rilevamento di pattern ripetitivi
+
+Strumenti e comandi chiave:
+- **`ss -tan`**
+- **`netstat -ant`**
+- **`lsof -i -P -n`**
+- **`curl`** (simulazione pattern API)
+- **`nc`**
+- analisi temporale delle connessioni
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## 8-Rilevamento di canali di comunicazione covert all’interno del traffico bancario
-Analizzare le connessioni di rete attive verso il server bancario per individuare sessioni che, pur utilizzando porte e protocolli **legittimi**, mostrano pattern **incompatibili** con il normale utilizzo dell’applicazione, come:
-- traffico minimo ma persistente
-- invio dati a intervalli regolari
-- durata della sessione sproporzionata rispetto alle operazioni eseguite
+In un’infrastruttura bancaria reale, non tutte le minacce si manifestano attraverso traffico voluminoso o comportamenti chiaramente anomali. Alcuni degli scenari più critici riguardano l’uso di canali di **comunicazione covert**, ovvero comunicazioni nascoste all’interno di traffico apparentemente legittimo.
 
-L’obiettivo è identificare possibili **canali di comunicazione nascosti** all’interno del traffico bancario.
+Questo tipo di canali può essere utilizzato per:
+- esfiltrazione lenta di dati
+- comunicazione con sistemi compromessi
+- mantenimento di accessi persistenti
+- aggiramento di controlli di sicurezza tradizionali
 
-**Focus tecnico**
+Il problema affronta l’individuazione di **comunicazioni non previste**, osservabili solo tramite un’analisi approfondita del comportamento di rete.
+
+### Scenario operativo
+
+Il problema si manifesta quando:
+- i servizi bancari risultano operativi
+- il traffico di rete appare regolare
+- le porte utilizzate sono autorizzate
+- non vengono generati errori o alert
+
+Tuttavia, osservando il traffico nel tempo, emergono:
+- connessioni persistenti anomale
+- comunicazioni a intervalli regolari
+- utilizzo di porte standard per scopi non previsti
+- traffico costante anche in assenza di attività utente
+
+Dal punto di vista funzionale, **nulla sembra fuori posto**.
+
+### Obiettivo dell’analisi
+
+Individuare flussi di comunicazione che:
+- sfruttano servizi e porte legittime
+- mantengono connessioni persistenti non giustificate
+- presentano pattern temporali artificiali
+- risultano incoerenti con l’operatività bancaria
+
+L’obiettivo è rilevare:
+- canali di controllo nascosti
+- tunneling di comunicazioni
+- uso improprio di servizi di rete
+- compromissioni silenziose dell’infrastruttura
+
+### Caratteristiche del comportamento sospetto
+
+I canali covert presentano spesso:
+- traffico a bassa intensità ma continuo
+- pacchetti o connessioni a intervalli regolari
+- assenza di picchi o burst di traffico
+- utilizzo delle stesse porte per periodi prolungati
+
+Ulteriori indicatori:
+- connessioni che non producono operazioni bancarie
+- socket sempre attivi senza variazioni significative
+- traffico che persiste anche durante finestre di inattività
+- comunicazioni non correlate a richieste utente
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- individuare flussi di rete sospetti
+- distinguere traffico operativo da traffico anomalo
+- identificare servizi usati come canali nascosti
+- supportare attività di containment e remediation
+
+I risultati possono portare a:
+- isolamento del servizio coinvolto
+- blocco selettivo delle comunicazioni
+- revisione delle policy di rete
+- audit di sicurezza approfonditi
+
+### Focus tecnico
+
+La risoluzione del problema si basa esclusivamente su **osservazione e correlazione del traffico di rete**, senza analisi del contenuto applicativo.
+
+Attività principali:
+- analisi della persistenza delle connessioni
+- osservazione dei pattern temporali
+- verifica dell’uso delle porte standard
+- confronto con il comportamento atteso
+
+Strumenti e comandi chiave:
 - **`ss -tan`**
-- durata socket **`ESTABLISHED`**
-- numero di byte trasmessi
-- frequenza connessioni
-- correlazione rete <-> azioni registrate
+- **`ss -s`**
+- **`netstat -ant`**
+- **`lsof -i -P -n`**
+- monitoraggio delle connessioni nel tempo
+- **`nc`** (per simulare canali persistenti)
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
 
 ## 9-Rilevamento di incoerenze tra contesto di rete e tipologia di operazione
-Analizzare le richieste ricevute dal server bancario per individuare operazioni che, pur essendo formalmente corrette, risultano incoerenti con il contesto di rete da cui provengono.
-L’analisi correla:
-- tipologia di operazione eseguita
-- indirizzo IP sorgente
-- porta e servizio utilizzato
+In un sistema bancario reale, **non tutte le operazioni sono lecite solo perché tecnicamente valide**.
+Ogni azione bancaria dovrebbe essere coerente con il **contesto di rete** in cui avviene: origine della connessione, tipo di dispositivo, canale di accesso e modalità di comunicazione.
 
-L’obiettivo è identificare **uso improprio dei canali di accesso**, potenziale indicatore di compromissione o di abuso dei servizi bancari, visto che molte frodi passano perchè l'operazione è valida, ma il **canale è sbagliato**
+Questo problema affronta uno scenario spesso trascurato: operazioni **formalmente corrette ma contestualmente incoerenti**, che rappresentano uno dei segnali più affidabili di compromissione.
 
-**Focus tecnico**
-- **`ss -tuln`**
-- **`lsof -i`**
-- correlazione IP <-> porta <-> azione
-- whitelist logica dei canali
+### Scenario operativo
+
+Il problema si manifesta quando:
+- le operazioni bancarie sono valide
+- non vengono generati errori applicativi
+- le credenziali risultano corrette
+- i servizi rispondono normalmente
+
+Tuttavia, analizzando il contesto di rete, emergono situazioni come:
+- bonifici effettuati da indirizzi IP tipici degli ATM
+- prelievi simulati da connessioni API
+- operazioni ad alto impatto provenienti da canali non coerenti
+- accessi amministrativi da endpoint pubblici
+
+Dal punto di vista applicativo, l’operazione è accettata.
+Dal punto di vista sistemico, il **contesto non torna**.
+
+### Obiettivo dell’analisi
+
+Individuare operazioni che:
+- non sono coerenti con il canale di accesso
+- violano il modello operativo atteso
+- avvengono da contesti di rete incompatibili
+- suggeriscono abuso o uso improprio delle credenziali
+
+L’obiettivo è correlare:
+- tipo di operazione
+- origine della connessione
+- porte e servizi utilizzati
+- profilo del client
+per rilevare comportamenti anomali che **non emergono dall’analisi dei soli dati**.
+
+### Caratteristiche del comportamento sospetto
+
+Le incoerenze tipiche includono:
+- ATM che effettuano bonifici
+- API che simulano operazioni fisiche
+- accessi critici da IP non previsti
+- utilizzo di porte corrette da contesti errati
+
+Ulteriori segnali:
+- ripetizione sistematica di operazioni incoerent
+- assenza di traffico “di contorno” tipico
+- utilizzo improprio di endpoint
+- mismatch tra ruolo del client e azione eseguita
+
+### Risultati dell’analisi
+
+L’analisi consente di:
+- individuare operazioni sospette ad alto rischio
+- classificare le incoerenze per gravità
+- supportare decisioni di blocco selettivo
+- rafforzare i modelli di trust del sistema
+
+I risultati possono portare a:
+- invalidazione di sessioni sospette
+- sospensione preventiva degli account
+- revisione delle regole di accesso
+- miglioramento delle policy di sicurezza
+
+### Focus tecnico
+
+La risoluzione del problema richiede **correlazione tra più livelli**, con forte enfasi sulla rete.
+
+Attività principali:
+- classificazione degli IP per tipologia (ATM, utenti, API)
+- analisi delle porte utilizzate
+- correlazione con il tipo di operazione
+- confronto con il comportamento atteso
+
+Strumenti e comandi chiave:
+- **`ss -tan`**
+- **`netstat -ant`**
+- **`lsof -i -P -n`**
+- **`nmap localhost`**
+- classificazione IP per ruolo
+- correlazione rete–operazione
 
 ### [Elenco dei problemi](#elenco-dei-problemi)
 ---
